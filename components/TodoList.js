@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import TodoItem from './TodoItem';
-import { MaterialIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
   container: {
@@ -14,8 +13,9 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     maxWidth: 500,
-    height: 200,
+    height: 60,  
     marginBottom: 20,
+    alignItems: 'center',
   },
   header: {
     fontSize: 28,
@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 15,
     paddingHorizontal: 10,
     paddingVertical: 5,
     backgroundColor: '#fff',
@@ -39,10 +38,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
-    marginBottom: 40,
-    position: 'absolute',
-    bottom: '8%',
+    marginBottom: 10,
     width: '100%',
+    maxWidth: 500,
   },
   textInput: {
     flex: 1,
@@ -71,26 +69,30 @@ const styles = StyleSheet.create({
   toggleButton: {
     backgroundColor: '#007BFF',
     padding: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
     borderRadius: 8,
     marginTop: 10,
-    width: 100,
+    width: '45%',
+    alignItems: 'center',
   },
   toggleButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     textAlign: 'center',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    width: '100%',
+    maxWidth: 500,
   },
   emptyMessage: {
     color: '#888',
     fontSize: 16,
     textAlign: 'center',
     marginTop: 10,
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 10,
-    marginVertical: '4%',
   },
 });
 
@@ -101,7 +103,7 @@ export default function TodoList() {
   const [editTaskId, setEditTaskId] = useState(null);
   const [viewPinned, setViewPinned] = useState(false);
   const [viewCompleted, setViewCompleted] = useState(false);
-  
+
   function addTask() {
     if (isEditing) {
       setTasks(tasks.map(task => (task.id === editTaskId ? { ...task, text } : task)));
@@ -109,7 +111,7 @@ export default function TodoList() {
       setEditTaskId(null);
     } else {
       const newTask = { id: Date.now(), text, completed: false, pinned: false };
-     if(text.trim() !== ""){
+      if (text.trim() !== "") {
         setTasks([...tasks, newTask]);
       }
     }
@@ -121,7 +123,7 @@ export default function TodoList() {
   }
 
   function toggleCompleted(id) {
-    setTasks(tasks.map(task => 
+    setTasks(tasks.map(task =>
       task.id === id ? { ...task, completed: !task.completed } : task
     ));
   }
@@ -152,13 +154,13 @@ export default function TodoList() {
   }
 
   function pinTask(id) {
-    setTasks(tasks.map(task => 
-      task.id === id ? { ...task, pinned: true } :task
+    setTasks(tasks.map(task =>
+      task.id === id ? { ...task, pinned: true } : task
     ));
   }
 
   function unpinTask(id) {
-    setTasks(tasks.map(task => 
+    setTasks(tasks.map(task =>
       task.id === id ? { ...task, pinned: false } : task
     ));
   }
@@ -181,9 +183,9 @@ export default function TodoList() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.contentContainer}>
-        <Text style={styles.header}>To do List</Text>
+      <Text style={styles.header}>To do List</Text>
 
+      <View style={styles.contentContainer}>
         {!viewPinned && !viewCompleted ? (
           <>
             <FlatList
@@ -198,33 +200,11 @@ export default function TodoList() {
                   moveUp={() => moveUp(item.id)}
                   moveDown={() => moveDown(item.id)}
                   pinTask={() => pinTask(item.id)}
+                  hideMoveButtons={item.pinned}
                 />
               )}
               ListEmptyComponent={<Text style={styles.emptyMessage}>No tasks available.</Text>}
             />
-
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.textInput}
-                value={text}
-                onChangeText={setText}
-                placeholder="New Task"
-                placeholderTextColor="#999"
-              />
-              <TouchableOpacity style={styles.addButton} onPress={addTask}>
-                <Text style={styles.addButtonText}>{isEditing ? 'Update' : 'Add'}</Text>
-              </TouchableOpacity>
-            </View>
-
-           <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={styles.toggleButton} onPress={toggleView}>
-              <Text style={styles.toggleButtonText}>Pinned</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.toggleButton} onPress={toggleViewCompleted}>
-              <Text style={styles.toggleButtonText}>Completed</Text>
-            </TouchableOpacity>
-        </View>
           </>
         ) : viewPinned ? (
           <>
@@ -238,14 +218,11 @@ export default function TodoList() {
                   deleteTask={deleteTask}
                   unpinTask={() => unpinTask(item.id)}
                   showUnpinButton
+                  hideMoveButtons={true}
                 />
               )}
               ListEmptyComponent={<Text style={styles.emptyMessage}>No pinned tasks available.</Text>}
             />
-
-            <TouchableOpacity style={styles.toggleButton} onPress={toggleView}>
-              <Text style={styles.toggleButtonText}>Back</Text>
-            </TouchableOpacity>
           </>
         ) : (
           <>
@@ -263,12 +240,31 @@ export default function TodoList() {
               )}
               ListEmptyComponent={<Text style={styles.emptyMessage}>No completed tasks available.</Text>}
             />
-
-            <TouchableOpacity style={styles.toggleButton} onPress={toggleViewCompleted}>
-              <Text style={styles.toggleButtonText}>Back</Text>
-            </TouchableOpacity>
           </>
         )}
+      </View>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.textInput}
+          value={text}
+          onChangeText={setText}
+          placeholder="New Task"
+          placeholderTextColor="#999"
+        />
+        <TouchableOpacity style={styles.addButton} onPress={addTask}>
+          <Text style={styles.addButtonText}>{isEditing ? 'Update' : 'Add'}</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.toggleButton} onPress={toggleView}>
+          <Text style={styles.toggleButtonText}>Pinned</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.toggleButton} onPress={toggleViewCompleted}>
+          <Text style={styles.toggleButtonText}>Completed</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
