@@ -20,7 +20,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
-    marginLeft: 10,
+    height: 60,
+    width: '100%',           
+    maxWidth: 500,           
+    marginLeft: 'auto', 
+    marginRight: 'auto',
   },
   text: {
     flex: 1,
@@ -69,6 +73,7 @@ export default function TodoItem({
   showUnpinButton,
   restoreTask,
   showRestoreButton,
+  hideMoveButtons,
 }) {
   return (
     <View style={styles.todoItem}>
@@ -76,7 +81,8 @@ export default function TodoItem({
       <Text style={[styles.text, task.completed && styles.completedText]}>
         {task.text}
       </Text>
-      {!task.completed && !showRestoreButton && (
+
+      {!task.completed && !showRestoreButton && !hideMoveButtons && (
         <>
           <TouchableOpacity style={[styles.button, styles.moveButton]} onPress={() => moveUp(task.id)}>
             <Text style={styles.buttonText}>↑</Text>
@@ -85,28 +91,24 @@ export default function TodoItem({
           <TouchableOpacity style={[styles.button, styles.moveButton]} onPress={() => moveDown(task.id)}>
             <Text style={styles.buttonText}>↓</Text>
           </TouchableOpacity>
-
-          {showUnpinButton ? (
-             <TouchableOpacity onPress={() => unpinTask(task.id)}>
-                <MaterialIcons
-                  name="push-pin"
-                  size={24}
-                  color="red"
-                  style={{ transform: [{ rotate: '45deg' }] }}
-                />
-              </TouchableOpacity>
-          ) : (
-
-            <TouchableOpacity onPress={() => pinTask(task.id)}>
-              <MaterialIcons 
-                name="push-pin" 
-                size={24}
-                marginLeft={20} 
-                color="black" />
-            </TouchableOpacity>
-          )}
         </>
       )}
+
+      {showUnpinButton ? (
+        <TouchableOpacity onPress={() => unpinTask(task.id)}>
+          <MaterialIcons
+            name="push-pin"
+            size={24}
+            color="red"
+            style={{ transform: [{ rotate: '45deg' }] }}
+          />
+        </TouchableOpacity>
+      ) : !task.completed && !showRestoreButton && (
+        <TouchableOpacity onPress={() => pinTask(task.id)}>
+          <MaterialIcons name="push-pin" size={24} marginLeft={20} color="black" />
+        </TouchableOpacity>
+      )}
+
       {showRestoreButton && (
         <TouchableOpacity style={[styles.button, styles.restoreButton]} onPress={restoreTask}>
           <Text style={styles.buttonText}>Restore</Text>
@@ -118,8 +120,8 @@ export default function TodoItem({
       </TouchableOpacity>
 
       {!task.completed && !showRestoreButton && (
-        <TouchableOpacity 
-          style={[styles.button, styles.editButton]} 
+        <TouchableOpacity
+          style={[styles.button, styles.editButton]}
           onPress={() => startEditTask(task.id)}>
           <Text style={styles.buttonText}>Edit</Text>
         </TouchableOpacity>
@@ -127,3 +129,4 @@ export default function TodoItem({
     </View>
   );
 }
+
