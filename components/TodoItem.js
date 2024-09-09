@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, CheckBox, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-
+import Checkbox from 'expo-checkbox';
 
 const styles = StyleSheet.create({
   todoItem: {
@@ -72,7 +72,7 @@ export default function TodoItem({
 }) {
   return (
     <View style={styles.todoItem}>
-      <CheckBox value={task.completed} onValueChange={() => toggleCompleted(task.id)} />
+      <Checkbox value={task.completed} onValueChange={() => toggleCompleted(task.id)} />
       <Text style={[styles.text, task.completed && styles.completedText]}>
         {task.text}
       </Text>
@@ -87,21 +87,21 @@ export default function TodoItem({
           </TouchableOpacity>
 
           {showUnpinButton ? (
-             <TouchableOpacity onPress={() => unpinTask(task.id)}>
-                <MaterialIcons
-                  name="push-pin"
-                  size={24}
-                  color="red"
-                  style={{ transform: [{ rotate: '45deg' }] }}
-                />
-              </TouchableOpacity>
+            <TouchableOpacity onPress={() => unpinTask(task.id)}>
+              <MaterialIcons
+                name="push-pin"
+                size={24}
+                color="red"
+                style={{ transform: [{ rotate: '45deg' }] }}
+              />
+            </TouchableOpacity>
           ) : (
 
             <TouchableOpacity onPress={() => pinTask(task.id)}>
-              <MaterialIcons 
-                name="push-pin" 
+              <MaterialIcons
+                name="push-pin"
                 size={24}
-                marginLeft={20} 
+                marginLeft={20}
                 color="black" />
             </TouchableOpacity>
           )}
@@ -118,8 +118,8 @@ export default function TodoItem({
       </TouchableOpacity>
 
       {!task.completed && !showRestoreButton && (
-        <TouchableOpacity 
-          style={[styles.button, styles.editButton]} 
+        <TouchableOpacity
+          style={[styles.button, styles.editButton]}
           onPress={() => startEditTask(task.id)}>
           <Text style={styles.buttonText}>Edit</Text>
         </TouchableOpacity>
