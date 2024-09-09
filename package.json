@@ -7,13 +7,17 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~3.2.3",
+    "@expo/vector-icons": "^14.0.2",
+    "@react-native-community/checkbox": "*",
     "expo": "~51.0.28",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-native": "0.74.5",
-    "@expo/vector-icons": "^14.0.2",
     "react-native-paper": "4.9.2",
-    "@react-native-community/checkbox": "*"
+    "react-native-web": "~0.19.10",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
