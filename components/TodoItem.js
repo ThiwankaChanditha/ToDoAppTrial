@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, CheckBox, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import BouncyCheckbox from "react-native-bouncy-checkbox";
+
 
 const styles = StyleSheet.create({
   todoItem: {
@@ -20,11 +20,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
-    height: 60,
-    width: '100%',           
-    maxWidth: 500,           
-    marginLeft: 'auto', 
-    marginRight: 'auto',
+    marginLeft: 10,
   },
   text: {
     flex: 1,
@@ -73,21 +69,14 @@ export default function TodoItem({
   showUnpinButton,
   restoreTask,
   showRestoreButton,
-  hideMoveButtons,
 }) {
   return (
     <View style={styles.todoItem}>
-      <BouncyCheckbox
-          size={25}
-          fillColor="#4CAF50"
-          unFillColor="#ccc"
-          text={<Text style={[styles.text, task.completed && styles.completedText]}>{task.text}</Text>}
-          iconStyle={{ borderColor: "red" }}
-          innerIconStyle={{ borderWidth: 2 }}
-          onPress={() => toggleCompleted(task.id)}
-        />
-
-      {!task.completed && !showRestoreButton && !hideMoveButtons && (
+      <CheckBox value={task.completed} onValueChange={() => toggleCompleted(task.id)} />
+      <Text style={[styles.text, task.completed && styles.completedText]}>
+        {task.text}
+      </Text>
+      {!task.completed && !showRestoreButton && (
         <>
           <TouchableOpacity style={[styles.button, styles.moveButton]} onPress={() => moveUp(task.id)}>
             <Text style={styles.buttonText}>↑</Text>
@@ -96,24 +85,28 @@ export default function TodoItem({
           <TouchableOpacity style={[styles.button, styles.moveButton]} onPress={() => moveDown(task.id)}>
             <Text style={styles.buttonText}>↓</Text>
           </TouchableOpacity>
+
+          {showUnpinButton ? (
+             <TouchableOpacity onPress={() => unpinTask(task.id)}>
+                <MaterialIcons
+                  name="push-pin"
+                  size={24}
+                  color="red"
+                  style={{ transform: [{ rotate: '45deg' }] }}
+                />
+              </TouchableOpacity>
+          ) : (
+
+            <TouchableOpacity onPress={() => pinTask(task.id)}>
+              <MaterialIcons 
+                name="push-pin" 
+                size={24}
+                marginLeft={20} 
+                color="black" />
+            </TouchableOpacity>
+          )}
         </>
       )}
-
-      {showUnpinButton ? (
-        <TouchableOpacity onPress={() => unpinTask(task.id)}>
-          <MaterialIcons
-            name="push-pin"
-            size={24}
-            color="red"
-            style={{ transform: [{ rotate: '45deg' }] }}
-          />
-        </TouchableOpacity>
-      ) : !task.completed && !showRestoreButton && (
-        <TouchableOpacity onPress={() => pinTask(task.id)}>
-          <MaterialIcons name="push-pin" size={24} marginLeft={20} color="black" />
-        </TouchableOpacity>
-      )}
-
       {showRestoreButton && (
         <TouchableOpacity style={[styles.button, styles.restoreButton]} onPress={restoreTask}>
           <Text style={styles.buttonText}>Restore</Text>
@@ -125,8 +118,8 @@ export default function TodoItem({
       </TouchableOpacity>
 
       {!task.completed && !showRestoreButton && (
-        <TouchableOpacity
-          style={[styles.button, styles.editButton]}
+        <TouchableOpacity 
+          style={[styles.button, styles.editButton]} 
           onPress={() => startEditTask(task.id)}>
           <Text style={styles.buttonText}>Edit</Text>
         </TouchableOpacity>
@@ -134,4 +127,3 @@ export default function TodoItem({
     </View>
   );
 }
-
