@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, CheckBox, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 const styles = StyleSheet.create({
   todoItem: {
@@ -77,10 +77,15 @@ export default function TodoItem({
 }) {
   return (
     <View style={styles.todoItem}>
-      <CheckBox value={task.completed} onValueChange={() => toggleCompleted(task.id)} />
-      <Text style={[styles.text, task.completed && styles.completedText]}>
-        {task.text}
-      </Text>
+      <BouncyCheckbox
+          size={25}
+          fillColor="#4CAF50"
+          unFillColor="#ccc"
+          text={<Text style={[styles.text, task.completed && styles.completedText]}>{task.text}</Text>}
+          iconStyle={{ borderColor: "red" }}
+          innerIconStyle={{ borderWidth: 2 }}
+          onPress={() => toggleCompleted(task.id)}
+        />
 
       {!task.completed && !showRestoreButton && !hideMoveButtons && (
         <>
